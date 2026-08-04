@@ -21,3 +21,21 @@ Port-forward provides temporary access directly to a specific pod. If that pod i
 ## Checkpoint Q6
 
 Kubernetes performs rolling updates gradually by replacing old pods with new pods while keeping the application available. It also stores the previous Deployment revision, so the update can be rolled back using a single command if there is a problem. With Docker Compose alone, this process would be harder because containers would usually need to be stopped, recreated, and checked manually. Docker Compose does not provide the same built-in rolling update, health-controlled replacement, and automatic rollback features.
+
+## Checkpoint Q7
+
+The frontend and API tiers use Deployments because they are stateless. Their pods do not need permanent identities or dedicated persistent storage, so Kubernetes can replace or scale them freely.
+
+PostgreSQL uses a StatefulSet because it is stateful. The StatefulSet gives the database pod a stable name, postgres-0, predictable startup ordering, and persistent storage through a PersistentVolumeClaim. Even when the pod is replaced, it can reconnect to the same stored database data.
+
+
+## Checkpoint Q8
+
+No, the data would normally not survive if PostgreSQL were deployed as a plain Deployment without a PersistentVolumeClaim. Data stored only inside a container belongs to that container's temporary writable filesystem. When the pod is deleted and replaced, the new pod receives a new container filesystem. The PersistentVolumeClaim stores the PostgreSQL data separately from the pod, allowing the recreated postgres-0 pod to reconnect to the same data.
+
+
+## Checkpoint Q9
+
+The broken pod showed ErrImagePull and later ImagePullBackOff. This does not exactly match the lecture's listed statuses of Running, Pending, CrashLoopBackOff, or OOMKilled. It is a related container waiting status.
+
+ErrImagePull means Kubernetes failed to download the specified container image. ImagePullBackOff means Kubernetes continues retrying the image download but waits for increasing periods between attempts. In this case, the failure occurred because nginx:definitely-not-a-real-tag does not exist.
