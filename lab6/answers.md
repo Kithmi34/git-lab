@@ -17,3 +17,7 @@ The frontend is managed by its own Deployment, while the database is managed sep
 ## Checkpoint Q5
 
 Port-forward provides temporary access directly to a specific pod. If that pod is deleted or replaced, the connection is lost. A Service provides a stable IP address and DNS name that automatically routes traffic to the available pods. Since pods are ephemeral and their IP addresses can change, Services ensure users can continue accessing the application without knowing the current pod IP addresses.
+
+## Checkpoint Q6
+
+Kubernetes performs rolling updates gradually by replacing old pods with new pods while keeping the application available. It also stores the previous Deployment revision, so the update can be rolled back using a single command if there is a problem. With Docker Compose alone, this process would be harder because containers would usually need to be stopped, recreated, and checked manually. Docker Compose does not provide the same built-in rolling update, health-controlled replacement, and automatic rollback features.
